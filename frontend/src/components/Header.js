@@ -72,6 +72,7 @@ const Header = () => {
         <Link to="/">Dashboard</Link>
         <Link to="/books">Books</Link>
         <Link to="/habits">Habits</Link>
+        <Link to="/todos">Todos</Link>
         <Link to="/calendar">Kalender</Link>
         <Link to="/timer">Timer</Link>
         {customLinks.map(link => (

@@ -9,12 +9,37 @@ const app = express();
 // Migration: fehlende Spalten automatisch anlegen
 const applyMigrations = async () => {
   const migrations = [
+    // Books table migrations
     `ALTER TABLE books ADD COLUMN IF NOT EXISTS image_url TEXT;`,
     `ALTER TABLE books ADD COLUMN IF NOT EXISTS publish_year TEXT;`,
     `ALTER TABLE books ADD COLUMN IF NOT EXISTS page_count INTEGER;`,
     `ALTER TABLE books ADD COLUMN IF NOT EXISTS isbn TEXT;`,
     `ALTER TABLE books ADD COLUMN IF NOT EXISTS ol_url TEXT;`,
-    `ALTER TABLE books ADD COLUMN IF NOT EXISTS added_date TIMESTAMP;`
+    `ALTER TABLE books ADD COLUMN IF NOT EXISTS added_date TIMESTAMP;`,
+    
+    // Create todos table if not exists
+    `CREATE TABLE IF NOT EXISTS todos (
+      id SERIAL PRIMARY KEY,
+      title VARCHAR(255) NOT NULL,
+      description TEXT,
+      completed BOOLEAN DEFAULT FALSE,
+      priority VARCHAR(20) DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high')),
+      due_date DATE,
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      completed_at TIMESTAMP WITH TIME ZONE
+    );`,
+    
+    // Create goals table if not exists
+    `CREATE TABLE IF NOT EXISTS goals (
+      id SERIAL PRIMARY KEY,
+      title VARCHAR(255) NOT NULL,
+      description TEXT,
+      target_date DATE,
+      progress INTEGER DEFAULT 0 CHECK (progress >= 0 AND progress <= 100),
+      status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'completed', 'paused')),
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      completed_at TIMESTAMP WITH TIME ZONE
+    );`
   ];
 
   for (const migration of migrations) {
@@ -270,6 +295,306 @@ app.get('/api/learning-sessions', async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
+  }
+});
+
+// --- Todo Routes ---
+
+// Get all todos
+app.get('/api/todos', async (req, res) => {
+  try {
+    const todos = await pool.query('SELECT * FROM todos ORDER BY created_at DESC');
+    res.json(todos.rows);
+  } catch (err) {
+    console.error('Error fetching todos:', err.message);
+    res.status(500).json({ 
+      error: 'Server Error', 
+      message: 'Fehler beim Laden der Todos',
+      details: err.message 
+    });
+  }
+});
+
+// Add a new todo
+app.post('/api/todos', async (req, res) => {
+  try {
+    const { title, description, priority, due_date } = req.body;
+    
+    // Validate required fields
+    if (!title || title.trim() === '') {
+      return res.status(400).json({ 
+        error: 'Validation Error', 
+        message: 'Titel ist erforderlich' 
+      });
+    }
+
+    // Validate priority
+    const validPriorities = ['low', 'medium', 'high'];
+    const finalPriority = validPriorities.includes(priority) ? priority : 'medium';
+
+    // Format due_date if provided
+    let formattedDueDate = null;
+    if (due_date) {
+      try {
+        formattedDueDate = new Date(due_date).toISOString().split('T')[0];
+      } catch (dateError) {
+        console.error('Invalid date format:', due_date);
+        formattedDueDate = null;
+      }
+    }
+
+    const newTodo = await pool.query(
+      'INSERT INTO todos (title, description, priority, due_date) VALUES ($1, $2, $3, $4) RETURNING *',
+      [title.trim(), description?.trim() || '', finalPriority, formattedDueDate]
+    );
+    
+    console.log('Todo created successfully:', newTodo.rows[0]);
+    res.json(newTodo.rows[0]);
+  } catch (err) {
+    console.error('Error creating todo:', err.message);
+    res.status(500).json({ 
+      error: 'Server Error', 
+      message: 'Fehler beim Erstellen des Todos',
+      details: err.message 
+    });
+  }
+});
+
+// Update a todo (toggle completion)
+app.put('/api/todos/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { completed, title, description, priority, due_date } = req.body;
+    
+    let query, values;
+    
+    if (completed !== undefined) {
+      // Toggle completion
+      query = `
+        UPDATE todos 
+        SET completed = $1, completed_at = $2 
+        WHERE id = $3 
+        RETURNING *
+      `;
+      values = [completed, completed ? new Date().toISOString() : null, id];
+    } else {
+      // Update other fields
+      const validPriorities = ['low', 'medium', 'high'];
+      const finalPriority = validPriorities.includes(priority) ? priority : 'medium';
+      
+      let formattedDueDate = null;
+      if (due_date) {
+        try {
+          formattedDueDate = new Date(due_date).toISOString().split('T')[0];
+        } catch (dateError) {
+          console.error('Invalid date format:', due_date);
+          formattedDueDate = null;
+        }
+      }
+
+      query = `
+        UPDATE todos 
+        SET title = $1, description = $2, priority = $3, due_date = $4 
+        WHERE id = $5 
+        RETURNING *
+      `;
+      values = [title?.trim() || '', description?.trim() || '', finalPriority, formattedDueDate, id];
+    }
+    
+    const updatedTodo = await pool.query(query, values);
+    
+    if (updatedTodo.rowCount === 0) {
+      return res.status(404).json({ 
+        error: 'Not Found', 
+        message: 'Todo nicht gefunden' 
+      });
+    }
+    
+    res.json(updatedTodo.rows[0]);
+  } catch (err) {
+    console.error('Error updating todo:', err.message);
+    res.status(500).json({ 
+      error: 'Server Error', 
+      message: 'Fehler beim Aktualisieren des Todos',
+      details: err.message 
+    });
+  }
+});
+
+// Delete a todo
+app.delete('/api/todos/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteTodo = await pool.query('DELETE FROM todos WHERE id = $1 RETURNING *', [id]);
+
+    if (deleteTodo.rowCount === 0) {
+      return res.status(404).json({ 
+        error: 'Not Found', 
+        message: 'Todo nicht gefunden' 
+      });
+    }
+
+    res.json({ 
+      message: 'Todo erfolgreich gelöscht', 
+      todo: deleteTodo.rows[0] 
+    });
+  } catch (err) {
+    console.error('Error deleting todo:', err.message);
+    res.status(500).json({ 
+      error: 'Server Error', 
+      message: 'Fehler beim Löschen des Todos',
+      details: err.message 
+    });
+  }
+});
+
+// --- Goal Routes ---
+
+// Get all goals
+app.get('/api/goals', async (req, res) => {
+  try {
+    const goals = await pool.query('SELECT * FROM goals ORDER BY created_at DESC');
+    res.json(goals.rows);
+  } catch (err) {
+    console.error('Error fetching goals:', err.message);
+    res.status(500).json({ 
+      error: 'Server Error', 
+      message: 'Fehler beim Laden der Ziele',
+      details: err.message 
+    });
+  }
+});
+
+// Add a new goal
+app.post('/api/goals', async (req, res) => {
+  try {
+    const { title, description, target_date, progress } = req.body;
+    
+    // Validate required fields
+    if (!title || title.trim() === '') {
+      return res.status(400).json({ 
+        error: 'Validation Error', 
+        message: 'Titel ist erforderlich' 
+      });
+    }
+
+    // Validate progress
+    const finalProgress = Math.max(0, Math.min(100, parseInt(progress) || 0));
+
+    // Format target_date if provided
+    let formattedTargetDate = null;
+    if (target_date) {
+      try {
+        formattedTargetDate = new Date(target_date).toISOString().split('T')[0];
+      } catch (dateError) {
+        console.error('Invalid date format:', target_date);
+        formattedTargetDate = null;
+      }
+    }
+
+    const newGoal = await pool.query(
+      'INSERT INTO goals (title, description, target_date, progress) VALUES ($1, $2, $3, $4) RETURNING *',
+      [title.trim(), description?.trim() || '', formattedTargetDate, finalProgress]
+    );
+    
+    console.log('Goal created successfully:', newGoal.rows[0]);
+    res.json(newGoal.rows[0]);
+  } catch (err) {
+    console.error('Error creating goal:', err.message);
+    res.status(500).json({ 
+      error: 'Server Error', 
+      message: 'Fehler beim Erstellen des Ziels',
+      details: err.message 
+    });
+  }
+});
+
+// Update a goal
+app.put('/api/goals/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, target_date, progress, status } = req.body;
+    
+    // Validate status
+    const validStatuses = ['active', 'completed', 'paused'];
+    const finalStatus = validStatuses.includes(status) ? status : 'active';
+    
+    // Validate progress
+    const finalProgress = Math.max(0, Math.min(100, parseInt(progress) || 0));
+
+    // Format target_date if provided
+    let formattedTargetDate = null;
+    if (target_date) {
+      try {
+        formattedTargetDate = new Date(target_date).toISOString().split('T')[0];
+      } catch (dateError) {
+        console.error('Invalid date format:', target_date);
+        formattedTargetDate = null;
+      }
+    }
+    
+    const query = `
+      UPDATE goals 
+      SET title = $1, description = $2, target_date = $3, progress = $4, status = $5, completed_at = $6
+      WHERE id = $7 
+      RETURNING *
+    `;
+    
+    const completed_at = finalStatus === 'completed' ? new Date().toISOString() : null;
+    const values = [
+      title?.trim() || '', 
+      description?.trim() || '', 
+      formattedTargetDate, 
+      finalProgress, 
+      finalStatus, 
+      completed_at, 
+      id
+    ];
+    
+    const updatedGoal = await pool.query(query, values);
+    
+    if (updatedGoal.rowCount === 0) {
+      return res.status(404).json({ 
+        error: 'Not Found', 
+        message: 'Ziel nicht gefunden' 
+      });
+    }
+    
+    res.json(updatedGoal.rows[0]);
+  } catch (err) {
+    console.error('Error updating goal:', err.message);
+    res.status(500).json({ 
+      error: 'Server Error', 
+      message: 'Fehler beim Aktualisieren des Ziels',
+      details: err.message 
+    });
+  }
+});
+
+// Delete a goal
+app.delete('/api/goals/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteGoal = await pool.query('DELETE FROM goals WHERE id = $1 RETURNING *', [id]);
+
+    if (deleteGoal.rowCount === 0) {
+      return res.status(404).json({ 
+        error: 'Not Found', 
+        message: 'Ziel nicht gefunden' 
+      });
+    }
+
+    res.json({ 
+      message: 'Ziel erfolgreich gelöscht', 
+      goal: deleteGoal.rows[0] 
+    });
+  } catch (err) {
+    console.error('Error deleting goal:', err.message);
+    res.status(500).json({ 
+      error: 'Server Error', 
+      message: 'Fehler beim Löschen des Ziels',
+      details: err.message 
+    });
   }
 });
 

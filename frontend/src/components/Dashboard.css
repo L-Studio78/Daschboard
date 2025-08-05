@@ -1,80 +1,215 @@
-/* Modernes, responsives Dashboard-Layout */
+/* Modern Dashboard Styles mit Design System */
 
 .dashboard-root {
-  width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 32px 16px 16px 16px;
-  box-sizing: border-box;
+  padding: var(--spacing-xl);
+  color: var(--text-color);
 }
 
 .dashboard-title {
-  text-align: left;
-  font-size: 2.2rem;
-  margin-bottom: 24px;
+  margin: 0 0 var(--spacing-xl) 0;
+  color: var(--text-color);
+  font-size: 2.5rem;
   font-weight: 700;
-  letter-spacing: -1px;
+  text-align: center;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--spacing-xxl);
 }
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  grid-template-rows: auto auto;
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-xl);
 }
 
 .dashboard-widget {
-  background: var(--widget-background, #fff);
-  border-radius: 18px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.07), 0 1.5px 4px rgba(0,0,0,0.04);
-  padding: 20px 18px 18px 18px;
-  min-width: 0;
-  min-height: 320px;
-  max-height: 420px;
-  display: flex;
-  flex-direction: column;
+  background: var(--widget-background);
+  border: 2px solid var(--widget-border-color);
+  border-radius: var(--border-radius-xl);
+  padding: var(--spacing-xl);
+  box-shadow: var(--widget-shadow);
+  transition: all var(--transition);
+  position: relative;
   overflow: hidden;
+  min-height: 200px;
+}
+
+.dashboard-widget::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--primary-hover));
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.dashboard-widget:hover::before {
+  opacity: 1;
+}
+
+.dashboard-widget:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
 }
 
 .dashboard-widget h3 {
-  font-size: 1.2rem;
-  margin-bottom: 12px;
-  font-weight: 600;
-  color: var(--primary, #2a2a2a);
+  margin: 0 0 var(--spacing-lg) 0;
+  color: var(--text-color);
+  font-size: 1.4rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 
-/* Inhalt in Widgets, die zu lang werden, bekommt Scrollbar */
-.dashboard-widget > *:not(h3) {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
+.dashboard-widget h3::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  border-radius: 2px;
 }
 
-/* Kalender-Widget kann höher sein */
+/* Widget-specific styles */
+.weatherclock-widget {
+  grid-column: span 2;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  color: white;
+  border: none;
+}
+
+.weatherclock-widget h3 {
+  color: white;
+}
+
+.weatherclock-widget::before {
+  display: none;
+}
+
+.book-widget {
+  background: linear-gradient(135deg, var(--success-color), var(--success-hover));
+  color: white;
+  border: none;
+}
+
+.book-widget h3 {
+  color: white;
+}
+
+.book-widget::before {
+  display: none;
+}
+
+.learning-widget {
+  background: linear-gradient(135deg, var(--info-color), var(--info-hover));
+  color: white;
+  border: none;
+}
+
+.learning-widget h3 {
+  color: white;
+}
+
+.learning-widget::before {
+  display: none;
+}
+
 .calendar-widget {
   grid-column: span 2;
-  min-height: 340px;
-  max-height: 520px;
 }
 
-.weatherclock-widget {
-  min-height: 220px;
-  max-height: 320px;
-  grid-column: span 1;
-  /* Optional: etwas mehr Platz für große Uhr */
+.habit-widget {
+  background: linear-gradient(135deg, var(--warning-color), var(--warning-hover));
+  color: white;
+  border: none;
 }
 
-@media (max-width: 900px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: none;
+.habit-widget h3 {
+  color: white;
+}
+
+.habit-widget::before {
+  display: none;
+}
+
+/* Widget content animations */
+.dashboard-widget > * {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+  }
+  
+  .weatherclock-widget,
   .calendar-widget {
     grid-column: span 1;
   }
 }
 
-/* Optional: Widget-spezifische Anpassungen */
-.book-widget, .learning-widget, .habit-widget {
-  /* z.B. unterschiedliche Farben oder Icons */
+@media (max-width: 768px) {
+  .dashboard-root {
+    padding: var(--spacing);
+  }
+  
+  .dashboard-title {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-xl);
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing);
+  }
+  
+  .dashboard-widget {
+    padding: var(--spacing-lg);
+    min-height: 150px;
+  }
+  
+  .dashboard-widget h3 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-root {
+    padding: var(--spacing-sm);
+  }
+  
+  .dashboard-title {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .dashboard-widget {
+    padding: var(--spacing);
+  }
+  
+  .dashboard-widget h3 {
+    font-size: 1.1rem;
+  }
 }

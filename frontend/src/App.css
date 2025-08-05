@@ -1,3 +1,6 @@
+/* Import modern design system */
+@import './design-system.css';
+
 /* General/* Define color variables for light and dark themes */
 [data-theme='light'] {
   --background-color: #f4f7f9;

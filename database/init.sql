@@ -48,6 +48,42 @@ CREATE TABLE learning_sessions (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Create a table for todos
+CREATE TABLE todos (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    completed BOOLEAN DEFAULT FALSE,
+    priority VARCHAR(20) DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high')),
+    due_date DATE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMP WITH TIME ZONE
+);
+
+-- Create a table for long-term goals
+CREATE TABLE goals (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    target_date DATE,
+    progress INTEGER DEFAULT 0 CHECK (progress >= 0 AND progress <= 100),
+    status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'completed', 'paused')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMP WITH TIME ZONE
+);
+
+-- Insert some sample todos
+INSERT INTO todos (title, description, priority, due_date) VALUES
+('Einkaufen gehen', 'Milch, Brot und Obst kaufen', 'high', CURRENT_DATE + INTERVAL '1 day'),
+('Projektplanung', 'Dashboard-Features planen', 'medium', CURRENT_DATE + INTERVAL '3 days'),
+('Sport machen', '30 Minuten Joggen', 'low', CURRENT_DATE);
+
+-- Insert some sample goals
+INSERT INTO goals (title, description, target_date, progress) VALUES
+('Programmieren lernen', 'React und Node.js beherrschen', CURRENT_DATE + INTERVAL '6 months', 25),
+('Fitness-Ziel', '10km in unter 50 Minuten laufen', CURRENT_DATE + INTERVAL '3 months', 40),
+('Sprachen lernen', 'Spanisch B1 Niveau erreichen', CURRENT_DATE + INTERVAL '1 year', 15);
+
 -- Add migration for additional book columns
 ALTER TABLE books
   ADD COLUMN IF NOT EXISTS image_url TEXT,

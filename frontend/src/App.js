@@ -14,6 +14,7 @@ import LearningTimer from './components/LearningTimer';
 import Settings from './components/Settings';
 import Header from './components/Header'; // Importiere die neue Header-Komponente
 import CalendarPage from './components/CalendarPage';
+import TodoManager from './components/TodoManager';
 
 function App() {
   const { theme } = useContext(ThemeContext);
@@ -46,6 +47,7 @@ function App() {
             <Route path="/timer" element={<LearningTimer />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/todos" element={<TodoManager />} />
           </Routes>
         </main>
       </div>
