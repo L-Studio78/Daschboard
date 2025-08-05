@@ -1,0 +1,19 @@
+/* Styles for BookStats Component */
+
+.stats-widget.chart-widget .chart-container {
+    height: 220px;
+    max-height: 220px;
+    min-height: 180px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+}
+
+.stats-widget.chart-widget .chart-container canvas {
+    height: 200px !important;
+    max-height: 200px !important;
+    width: 100% !important;
+    object-fit: contain;
+}

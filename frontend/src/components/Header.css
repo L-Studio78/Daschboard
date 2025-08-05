@@ -1,0 +1,111 @@
+/* Styles for the new Header Component */
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    background-color: var(--nav-background);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: background-color 0.3s;
+    height: 60px;
+    flex-wrap: nowrap; /* Verhindert das Umbrechen des Haupt-Headers */
+    min-height: 60px;
+    width: 100%;
+    box-sizing: border-box;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap; /* Erlaubt Navigationslinks, umzubrechen */
+    margin-right: auto;
+    flex-basis: auto;
+    flex-grow: 1;
+    max-width: calc(100% - 200px); /* Begrenzt die Breite der Navigation, um Platz für Info zu lassen */
+    overflow-x: auto; /* Ermöglicht horizontales Scrollen, falls Links zu viele sind */
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 5px;
+}
+
+.main-nav a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--nav-text-color);
+    padding: 14px 10px;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.2s, color 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.main-nav a:hover {
+    background-color: var(--nav-hover-background);
+}
+
+.header-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 0.95em;
+    color: var(--nav-text-color);
+    flex-shrink: 0;
+    margin-left: 10px;
+    white-space: nowrap;
+}
+
+.current-time {
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.weather-info {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+.weather-info.weather-error {
+  color: #e74c3c;
+  font-weight: 500;
+  font-size: 1em;
+  padding-left: 8px;
+  opacity: 0.8;
+}
+
+.weather-icon {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.weather-description {
+    text-transform: capitalize;
+}
+
+.weather-city {
+    font-style: italic;
+    opacity: 0.8;
+}
+
+.settings-link a {
+    color: var(--nav-text-color);
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    margin-left: 10px;
+    flex-shrink: 0;
+}
+
+.settings-link a:hover {
+    background-color: var(--nav-hover-background);
+}

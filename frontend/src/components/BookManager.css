@@ -1,0 +1,165 @@
+/* Styles for BookManager Component */
+
+.book-manager-container {
+    padding: 20px;
+}
+
+.book-manager-container .section-title {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.search-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.search-form input {
+    flex: 1;
+    min-width: 150px;
+}
+
+.search-results-container {
+    border: 1px solid var(--widget-border-color);
+    border-radius: 8px;
+    background-color: var(--widget-background);
+    padding: 15px;
+    box-shadow: var(--widget-shadow);
+    margin-bottom: 20px;
+}
+
+.search-results-container .results-title {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--text-color);
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+    border-bottom: 1px dashed var(--widget-border-color);
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.book-cover-thumbnail {
+    width: 60px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.book-info {
+    flex-grow: 1;
+    color: var(--text-color);
+}
+
+.book-info b {
+    display: block;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.book-info span {
+    font-size: 0.9em;
+    color: var(--text-color);
+}
+
+.add-book-button {
+    flex-shrink: 0;
+    padding: 8px 15px;
+}
+
+.book-list-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.book-item {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--widget-border-color);
+    padding: 15px;
+    border-radius: 8px;
+    background-color: var(--widget-background);
+    box-shadow: var(--widget-shadow);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.book-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.book-cover-large {
+    width: 100%;
+    max-height: 250px;
+    object-fit: contain;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.book-details {
+    flex-grow: 1;
+    color: var(--text-color);
+}
+
+.book-details h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.book-details p {
+    margin-bottom: 5px;
+    font-size: 0.95em;
+}
+
+.delete-book-button {
+    margin-top: 15px;
+    align-self: flex-start;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.delete-book-button:hover {
+    background-color: #c82333;
+    filter: none;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid var(--widget-border-color);
+}
+
+.pagination-controls button {
+    padding: 10px 20px;
+    font-size: 1em;
+}
+
+.pagination-controls span {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 10px;
+    font-weight: bold;
+}

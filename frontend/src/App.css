@@ -1,0 +1,722 @@
+/* General/* Define color variables for light and dark themes */
+[data-theme='light'] {
+  --background-color: #f4f7f9;
+  --text-color: #333;
+  --nav-background: #ffffff;
+  --nav-text-color: #333;
+  --nav-hover-background: #eef2f5;
+  --content-background: #f4f7f9;
+  --widget-background: #ffffff;
+  --widget-border-color: #e1e8ed;
+  --widget-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  --button-background: #e7e7e7;
+  --button-text: #000;
+  --input-background: #fff;
+  --chart-color-1: rgba(54, 162, 235, 0.6);
+  --chart-color-2: rgba(255, 99, 132, 0.6);
+  --chart-grid-color: #e1e8ed;
+  --chart-tick-color: #666;
+}
+
+[data-theme='dark'] {
+  --background-color: #1a1a1a;
+  --text-color: #e1e1e1;
+  --nav-background: #252525;
+  --nav-text-color: #e1e1e1;
+  --nav-hover-background: #3b3b3b;
+  --content-background: #1a1a1a;
+  --widget-background: #252525;
+  --widget-border-color: #3b3b3b;
+  --widget-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  --button-background: #555;
+  --button-text: #fff;
+  --input-background: #3b3b3b;
+  --chart-color-1: rgba(75, 192, 192, 0.7);
+  --chart-color-2: rgba(255, 206, 86, 0.7);
+  --chart-grid-color: #3b3b3b;
+  --chart-tick-color: #ccc;
+}
+
+[data-theme='mint'] {
+  --background-color: #f0fdfa;
+  --text-color: #042f2e;
+  --nav-background: #ccece6;
+  --nav-text-color: #042f2e;
+  --nav-hover-background: #a6e0d6;
+  --content-background: #f0fdfa;
+  --widget-background: #ffffff;
+  --widget-border-color: #ccece6;
+  --widget-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  --button-background: #a6e0d6;
+  --button-text: #042f2e;
+  --input-background: #fff;
+  --chart-color-1: rgba(22, 160, 133, 0.7);
+  --chart-color-2: rgba(243, 156, 18, 0.7);
+  --chart-grid-color: #ccece6;
+  --chart-tick-color: #05504d;
+}
+
+[data-theme='synthwave'] {
+  --background-color: #1a1423;
+  --text-color: #f1d4d4;
+  --nav-background: #372549;
+  --nav-text-color: #f1d4d4;
+  --nav-hover-background: #4a3263;
+  --content-background: #1a1423;
+  --widget-background: #241b33;
+  --widget-border-color: #734b6d;
+  --widget-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  --button-background: #ff7f50;
+  --button-text: #1a1423;
+  --input-background: #372549;
+  --chart-color-1: rgba(255, 127, 80, 0.7);
+  --chart-color-2: rgba(0, 255, 255, 0.7);
+  --chart-grid-color: #372549;
+  --chart-tick-color: #f1d4d4;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+  line-height: 1.6; /* Verbesserte Lesbarkeit */
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Statt fester Höhe, um Inhalte bei Bedarf zu erweitern */
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Removed header styles - will be replaced by new Header component styles */
+/*
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background-color: var(--nav-background);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: background-color 0.3s;
+  height: 60px;
+  flex-wrap: nowrap;
+  min-height: 60px;
+  width: 100%;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-right: auto;
+  flex-basis: auto;
+  flex-grow: 1;
+  max-width: calc(100% - 200px);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 5px;
+}
+
+.main-nav a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--nav-text-color);
+  padding: 14px 10px;
+  text-decoration: none;
+  text-align: center;
+  transition: background-color 0.2s, color 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.header-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 0.95em;
+  color: var(--nav-text-color);
+  flex-shrink: 0;
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+.current-time {
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.weather-info {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.weather-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.weather-description {
+  text-transform: capitalize;
+}
+
+.weather-city {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.settings-link a {
+  color: var(--nav-text-color);
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+*/
+
+button {
+  margin: 5px;
+  background-color: var(--button-background);
+  color: var(--button-text);
+  border: 1px solid var(--widget-border-color);
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+button:hover {
+    filter: brightness(1.2);
+}
+
+/* Form styles */
+input[type="text"],
+input[type="number"],
+textarea {
+    padding: 10px; /* Einheitlichere Polsterung */
+    border-radius: 6px; /* Einheitliche abgerundete Ecken */
+    border: 1px solid var(--widget-border-color);
+    background-color: var(--input-background);
+    color: var(--text-color);
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px; /* Fügt etwas Abstand nach unten hinzu */
+}
+
+/* Dashboard Widget Styles */
+.dashboard-container {
+    padding: 20px;
+}
+
+.dashboard-widgets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 2-3 Spalten Layout */
+  gap: 20px;
+  align-items: start; /* Align items to the top */
+}
+
+.dashboard-section {
+    background-color: var(--widget-background);
+    border: 1px solid var(--widget-border-color);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: var(--widget-shadow);
+    transition: all 0.3s ease; /* smooth transitions for hover effects etc */
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-section.full-width-widget {
+    grid-column: 1 / -1; /* Nimmt die volle Breite ein */
+}
+
+.stats-widget, .chart-widget, .habit-widget, .calendar-widget, .learning-stats-widget {
+  background: var(--widget-background);
+  color: var(--text-color);
+  border-radius: 12px;
+  box-shadow: var(--widget-shadow);
+  border: 1px solid var(--widget-border-color);
+  margin-bottom: 0; /* Entferne den margin-bottom, da gap verwendet wird */
+  padding: 1.5rem;
+  animation: fadeInUp 0.6s cubic-bezier(.23,1.01,.32,1) both;
+  height: auto; /* Statt 100%, damit Inhalt die Höhe bestimmt und Überläufe vermieden werden */
+}
+
+.stats-widget h3 {
+  margin-top: 0;
+  border-bottom: 2px solid var(--widget-border-color);
+  padding-bottom: 10px;
+  transition: border-color 0.3s;
+}
+
+/* Theme Selector Styles */
+.theme-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Buttons */
+button {
+  color: var(--button-text, var(--text-color));
+  background: var(--button-background);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.15s;
+  outline: none;
+  cursor: pointer;
+}
+button:hover, button:focus {
+  background: var(--nav-hover-background, #e0e0e0);
+  color: var(--text-color);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+}
+
+/* Tab Navigation */
+.settings-tabs {
+  display: flex;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 24px;
+}
+.settings-tabs button {
+  flex: 1;
+  border-radius: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: border-bottom 0.2s, color 0.2s, background 0.2s;
+}
+.settings-tabs button.active, .settings-tabs button:focus {
+  border-bottom: 3px solid #007bff;
+  color: #007bff;
+  background: var(--widget-background);
+}
+
+/* Inputs */
+input, textarea {
+  background: var(--input-background);
+  color: var(--text-color);
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 1rem;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+input:focus, textarea:focus {
+  outline: none; /* Entfernt den Standard-Outline-Fokus */
+  border-color: #007bff; /* Hellerer Fokus-Rand */
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Weicherer Fokus-Schatten */
+}
+
+/* Widget Animation */
+.stats-widget, .chart-widget, .dashboard-widgets > div, .habit-widget, .calendar-widget, .learning-stats-widget {
+  background: var(--widget-background);
+  color: var(--text-color);
+  border-radius: 12px;
+  box-shadow: var(--widget-shadow);
+  border: 1px solid var(--widget-border-color);
+  margin-bottom: 0; /* Entferne den margin-bottom, da gap verwendet wird */
+  padding: 1.5rem;
+  animation: fadeInUp 0.6s cubic-bezier(.23,1.01,.32,1) both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Animierte Hover-Card für Kalender-Events */
+.calendar-widget ul.event-list {
+  list-style: none;
+  padding: 0;
+}
+
+.calendar-widget ul.event-list li.event-item {
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  background: var(--nav-hover-background); /* Use a subtle background */
+  margin: 8px 0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--widget-border-color);
+  color: var(--text-color);
+}
+
+.calendar-widget ul.event-list li.event-item:hover {
+  background: var(--nav-hover-background);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+  transform: scale(1.03);
+}
+
+/* Modernes Scrollbar-Styling */
+body::-webkit-scrollbar {
+  width: 12px;
+  background: var(--background-color);
+}
+body::-webkit-scrollbar-thumb {
+  background: var(--widget-border-color);
+  border-radius: 6px;
+}
+
+/* Schriftfarbe überall theme-gerecht */
+*, *::before, *::after {
+  color: inherit;
+  box-sizing: border-box;
+}
+
+
+.theme-option button {
+  min-width: 120px;
+  padding: 15px 20px;
+  border: 2px solid transparent;
+  font-weight: bold;
+  color: var(--button-text);
+}
+
+.theme-option button.active {
+  border-color: var(--nav-text-color);
+  box-shadow: 0 0 10px var(--nav-hover-background);
+}
+
+/* Book Item Styles */
+.book-item {
+    border: 1px solid var(--widget-border-color);
+    padding: 15px;
+    border-radius: 8px;
+    background-color: var(--widget-background);
+    box-shadow: var(--widget-shadow);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* BookManager Specific Styles */
+.search-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.search-form input {
+    flex: 1;
+    min-width: 150px; /* Ensure inputs don't get too small */
+}
+
+.search-results-container {
+    border: 1px solid var(--widget-border-color);
+    border-radius: 8px;
+    background-color: var(--widget-background);
+    padding: 15px;
+    box-shadow: var(--widget-shadow);
+    margin-bottom: 20px;
+}
+
+.search-results-container h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--text-color);
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+    border-bottom: 1px dashed var(--widget-border-color);
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.book-cover-thumbnail {
+    width: 60px;
+    height: 90px;
+    object-fit: cover; /* Maintain aspect ratio and cover area */
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.book-info {
+    flex-grow: 1;
+    color: var(--text-color);
+}
+
+.book-info b {
+    display: block;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.book-info span {
+    font-size: 0.9em;
+    color: var(--text-color);
+}
+
+.add-book-button {
+    flex-shrink: 0;
+    padding: 8px 15px; /* Adjust padding for better look */
+}
+
+.book-list-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsive grid */
+    gap: 20px;
+}
+
+.book-item {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--widget-border-color);
+    padding: 15px;
+    border-radius: 8px;
+    background-color: var(--widget-background);
+    box-shadow: var(--widget-shadow);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.book-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.book-cover-large {
+    width: 100%;
+    max-height: 250px; /* Limit height to prevent overly large images */
+    object-fit: contain; /* Contain ensures full image is visible */
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.book-details {
+    flex-grow: 1;
+    color: var(--text-color);
+}
+
+.book-details h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.book-details p {
+    margin-bottom: 5px;
+    font-size: 0.95em;
+}
+
+.delete-book-button {
+    margin-top: 15px;
+    align-self: flex-start; /* Align button to the left within the item */
+    background-color: #dc3545; /* Red color for delete */
+    color: white;
+    border: none;
+}
+
+.delete-book-button:hover {
+    background-color: #c82333;
+    filter: none; /* Override general button filter */
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid var(--widget-border-color);
+}
+
+.pagination-controls button {
+    padding: 10px 20px;
+    font-size: 1em;
+}
+
+.pagination-controls span {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+/* Habit Tracker Styles */
+.habit-widget {
+    /* Inherits from .dashboard-section */
+}
+
+.habit-add-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.habit-add-form input.habit-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid var(--widget-border-color);
+    border-radius: 6px;
+    background-color: var(--input-background);
+    color: var(--text-color);
+}
+
+.habit-add-form button.add-habit-button {
+    padding: 10px 20px;
+}
+
+.habit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.habit-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--widget-border-color);
+}
+
+.habit-item:last-child {
+    border-bottom: none;
+}
+
+.habit-checkbox {
+    margin-right: 10px;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.habit-name {
+    flex-grow: 1;
+    font-size: 1.1em;
+    color: var(--text-color);
+}
+
+.habit-streak {
+    font-size: 0.9em;
+    color: var(--text-color);
+    background-color: var(--nav-hover-background);
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-left: 15px;
+    flex-shrink: 0;
+}
+
+.delete-habit-button {
+    margin-left: 15px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.delete-habit-button:hover {
+    background-color: #c82333;
+    filter: none;
+}
+
+/* Settings Component Specific Styles */
+.settings-container {
+    max-width: 700px; /* Make settings wider */
+    margin: 2rem auto;
+    background: var(--widget-background);
+    border-radius: 8px;
+    box-shadow: var(--widget-shadow);
+    padding: 24px;
+    border: 1px solid var(--widget-border-color);
+}
+
+.settings-tab-content {
+    padding: 20px;
+    border: 1px solid var(--widget-border-color);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    background-color: var(--widget-background);
+}
+
+.link-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px dashed var(--widget-border-color);
+    border-radius: 8px;
+}
+
+.link-form button {
+    align-self: flex-start; /* Buttons am Anfang ausrichten */
+    margin-top: 10px;
+}
+
+.link-form button.cancel-button {
+    background-color: #6c757d; /* Grau für Abbrechen */
+}
+
+.custom-links-list {
+    list-style: none;
+    padding: 0;
+}
+
+.custom-link-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--widget-border-color);
+}
+
+.custom-link-item:last-child {
+    border-bottom: none;
+}
+
+.custom-link-item span {
+    font-size: 1.05em;
+    color: var(--text-color);
+}
+
+.custom-link-item div button {
+    margin-left: 10px;
+    padding: 5px 10px;
+}
+
+.custom-link-item .edit-button {
+    background-color: #007bff;
+    color: white;
+}
+
+.custom-link-item .delete-button {
+    background-color: #dc3545;
+    color: white;
+}

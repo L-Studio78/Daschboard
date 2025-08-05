@@ -1,0 +1,78 @@
+/* Styles for HabitTracker Component */
+
+.habit-widget {
+    /* Inherits from .dashboard-section */
+}
+
+.habit-add-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.habit-add-form input.habit-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid var(--widget-border-color);
+    border-radius: 6px;
+    background-color: var(--input-background);
+    color: var(--text-color);
+}
+
+.habit-add-form button.add-habit-button {
+    padding: 10px 20px;
+}
+
+.habit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.habit-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--widget-border-color);
+}
+
+.habit-item:last-child {
+    border-bottom: none;
+}
+
+.habit-checkbox {
+    margin-right: 10px;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.habit-name {
+    flex-grow: 1;
+    font-size: 1.1em;
+    color: var(--text-color);
+}
+
+.habit-streak {
+    font-size: 0.9em;
+    color: var(--text-color);
+    background-color: var(--nav-hover-background);
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-left: 15px;
+    flex-shrink: 0;
+}
+
+.delete-habit-button {
+    margin-left: 15px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.delete-habit-button:hover {
+    background-color: #c82333;
+    filter: none;
+}

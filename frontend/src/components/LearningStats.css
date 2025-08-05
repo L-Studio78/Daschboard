@@ -1,0 +1,34 @@
+/* Styles for LearningStats Component */
+
+.learning-stats-widget {
+    /* Inherits from .dashboard-section */
+}
+
+.learning-stats-widget h2 {
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.learning-stats-widget .chart-container {
+    margin-bottom: 30px;
+    height: 220px;
+    max-height: 220px;
+    min-height: 180px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+}
+
+.learning-stats-widget .chart-container:last-child {
+    margin-bottom: 0;
+}
+
+/* Chart.js Canvas direkt begrenzen */
+.learning-stats-widget .chart-container canvas {
+    height: 200px !important;
+    max-height: 200px !important;
+    width: 100% !important;
+    object-fit: contain;
+}
