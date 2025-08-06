@@ -1,280 +1,111 @@
-/* Modern Header Styles mit Design System */
+/* Styles for the new Header Component */
 
 .app-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 var(--spacing-xl);
-  background: var(--widget-background);
-  border-bottom: 2px solid var(--widget-border-color);
-  box-shadow: var(--shadow);
-  transition: all var(--transition);
-  height: 70px;
-  flex-wrap: nowrap;
-  min-height: 70px;
-  width: 100%;
-  box-sizing: border-box;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    background-color: var(--nav-background);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: background-color 0.3s;
+    height: 60px;
+    flex-wrap: nowrap; /* Verhindert das Umbrechen des Haupt-Headers */
+    min-height: 60px;
+    width: 100%;
+    box-sizing: border-box;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .main-nav {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing);
-  flex-wrap: wrap;
-  margin-right: auto;
-  flex-basis: auto;
-  flex-grow: 1;
-  max-width: calc(100% - 300px);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap; /* Erlaubt Navigationslinks, umzubrechen */
+    margin-right: auto;
+    flex-basis: auto;
+    flex-grow: 1;
+    max-width: calc(100% - 200px); /* Begrenzt die Breite der Navigation, um Platz für Info zu lassen */
+    overflow-x: auto; /* Ermöglicht horizontales Scrollen, falls Links zu viele sind */
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 5px;
 }
 
 .main-nav a {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  color: var(--text-color);
-  padding: var(--spacing) var(--spacing-lg);
-  text-decoration: none;
-  text-align: center;
-  transition: all var(--transition);
-  white-space: nowrap;
-  flex-shrink: 0;
-  border-radius: var(--border-radius);
-  font-weight: 600;
-  font-size: 14px;
-  position: relative;
-  overflow: hidden;
-}
-
-.main-nav a::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left var(--transition-slow);
-}
-
-.main-nav a:hover::before {
-  left: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--nav-text-color);
+    padding: 14px 10px;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.2s, color 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .main-nav a:hover {
-  background: var(--nav-hover-background);
-  color: var(--text-color);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
-}
-
-.main-nav a.active {
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-  color: white;
-  box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+    background-color: var(--nav-hover-background);
 }
 
 .header-info {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-lg);
-  font-size: 0.95em;
-  color: var(--text-color);
-  flex-shrink: 0;
-  margin-left: var(--spacing);
-  white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 0.95em;
+    color: var(--nav-text-color);
+    flex-shrink: 0;
+    margin-left: 10px;
+    white-space: nowrap;
 }
 
 .current-time {
-  font-weight: 700;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-size: 16px;
+    font-weight: bold;
+    flex-shrink: 0;
 }
 
 .weather-info {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  flex-shrink: 0;
-  padding: var(--spacing-sm) var(--spacing);
-  background: var(--widget-background);
-  border: 2px solid var(--widget-border-color);
-  border-radius: var(--border-radius);
-  transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
 }
 
-.weather-info:hover {
-  border-color: var(--primary-color);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow);
+.weather-info.weather-error {
+  color: #e74c3c;
+  font-weight: 500;
+  font-size: 1em;
+  padding-left: 8px;
+  opacity: 0.8;
 }
 
-.weather-emoji {
-  font-size: 24px;
-  margin-right: var(--spacing-sm);
+.weather-icon {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
 }
 
 .weather-description {
-  text-transform: capitalize;
-  font-weight: 600;
-  color: var(--text-color);
+    text-transform: capitalize;
 }
 
 .weather-city {
-  font-style: italic;
-  opacity: 0.8;
-  color: var(--text-color);
-}
-
-.weather-error {
-  color: var(--danger-color);
-  font-weight: 600;
-}
-
-.settings-link {
-  margin-left: var(--spacing);
-  flex-shrink: 0;
+    font-style: italic;
+    opacity: 0.8;
 }
 
 .settings-link a {
-  color: var(--text-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing);
-  border-radius: 50%;
-  transition: all var(--transition);
-  background: var(--widget-background);
-  border: 2px solid var(--widget-border-color);
-  width: 48px;
-  height: 48px;
-  position: relative;
-  overflow: hidden;
-}
-
-.settings-link a::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left var(--transition-slow);
-}
-
-.settings-link a:hover::before {
-  left: 100%;
+    color: var(--nav-text-color);
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    margin-left: 10px;
+    flex-shrink: 0;
 }
 
 .settings-link a:hover {
-  background: var(--nav-hover-background);
-  border-color: var(--primary-color);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .app-header {
-    padding: 0 var(--spacing);
-    height: 60px;
-    min-height: 60px;
-  }
-  
-  .main-nav {
-    max-width: calc(100% - 250px);
-    gap: var(--spacing-sm);
-  }
-  
-  .main-nav a {
-    padding: var(--spacing-sm) var(--spacing);
-    font-size: 13px;
-  }
-  
-  .header-info {
-    gap: var(--spacing);
-  }
-  
-  .current-time {
-    font-size: 14px;
-  }
-  
-  .weather-info {
-    padding: var(--spacing-sm);
-  }
-  
-  .weather-emoji {
-    font-size: 20px;
-  }
-  
-  .settings-link a {
-    width: 40px;
-    height: 40px;
-    padding: var(--spacing-sm);
-  }
-}
-
-@media (max-width: 768px) {
-  .app-header {
-    flex-direction: column;
-    height: auto;
-    min-height: auto;
-    padding: var(--spacing);
-    gap: var(--spacing);
-  }
-  
-  .main-nav {
-    max-width: 100%;
-    justify-content: center;
-    margin-right: 0;
-    margin-bottom: var(--spacing);
-  }
-  
-  .header-info {
-    margin-left: 0;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: var(--spacing);
-  }
-  
-  .settings-link {
-    margin-left: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .app-header {
-    padding: var(--spacing-sm);
-  }
-  
-  .main-nav {
-    gap: var(--spacing-sm);
-  }
-  
-  .main-nav a {
-    padding: var(--spacing-sm);
-    font-size: 12px;
-  }
-  
-  .header-info {
-    flex-direction: column;
-    gap: var(--spacing-sm);
-  }
-  
-  .weather-info {
-    flex-direction: column;
-    text-align: center;
-    gap: var(--spacing-sm);
-  }
+    background-color: var(--nav-hover-background);
 }

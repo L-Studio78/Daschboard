@@ -39,6 +39,26 @@ const applyMigrations = async () => {
       status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'completed', 'paused')),
       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
       completed_at TIMESTAMP WITH TIME ZONE
+    );`,
+    
+    // Create habits table if not exists
+    `CREATE TABLE IF NOT EXISTS habits (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      type VARCHAR(16) DEFAULT 'count' CHECK (type IN ('count', 'time')),
+      unit VARCHAR(16) DEFAULT 'x',
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    );`,
+    
+    // Create habit_completions table if not exists
+    `CREATE TABLE IF NOT EXISTS habit_completions (
+      id SERIAL PRIMARY KEY,
+      habit_id INTEGER REFERENCES habits(id) ON DELETE CASCADE,
+      completion_date DATE NOT NULL,
+      value NUMERIC,
+      unit VARCHAR(16),
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(habit_id, completion_date)
     );`
   ];
 
@@ -597,6 +617,136 @@ app.delete('/api/goals/:id', async (req, res) => {
     });
   }
 });
+
+// --- HABITS API ---
+
+// Get all habits
+app.get('/api/habits', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM habits ORDER BY id');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: 'Server Error', message: err.message });
+  }
+});
+
+// Create a new habit
+app.post('/api/habits', async (req, res) => {
+  try {
+    const { name, type, unit } = req.body;
+    if (!name) return res.status(400).json({ error: 'Name is required' });
+    const habitType = type === 'time' ? 'time' : 'count';
+    const habitUnit = unit ? unit : (habitType === 'time' ? 'min' : 'x');
+    const result = await pool.query('INSERT INTO habits (name, type, unit) VALUES ($1, $2, $3) RETURNING *', [name, habitType, habitUnit]);
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Server Error', message: err.message });
+  }
+});
+
+// Delete a habit
+app.delete('/api/habits/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query('DELETE FROM habits WHERE id = $1', [id]);
+    res.json({ message: 'Habit deleted' });
+  } catch (err) {
+    res.status(500).json({ error: 'Server Error', message: err.message });
+  }
+});
+
+// Mark habit as completed for a date (default: today)
+app.post('/api/habits/:id/complete', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { date, value, unit } = req.body;
+    const completionDate = date ? new Date(date) : new Date();
+    await pool.query(
+      `INSERT INTO habit_completions (habit_id, completion_date, value, unit)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (habit_id, completion_date) DO UPDATE SET value = $3, unit = $4`,
+      [id, completionDate.toISOString().slice(0, 10), value, unit]
+    );
+    res.json({ message: 'Habit marked as completed', value, unit });
+  } catch (err) {
+    res.status(500).json({ error: 'Server Error', message: err.message });
+  }
+});
+
+// Remove completion for a habit on a date
+app.delete('/api/habits/:id/complete', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { date } = req.body;
+    if (!date) return res.status(400).json({ error: 'Date is required' });
+    await pool.query(
+      'DELETE FROM habit_completions WHERE habit_id = $1 AND completion_date = $2',
+      [id, new Date(date).toISOString().slice(0, 10)]
+    );
+    res.json({ message: 'Completion removed' });
+  } catch (err) {
+    res.status(500).json({ error: 'Server Error', message: err.message });
+  }
+});
+
+// Get completions per habit (optionally for a date range)
+app.get('/api/habits/:id/completions', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { from, to } = req.query;
+    let query = 'SELECT * FROM habit_completions WHERE habit_id = $1';
+    const params = [id];
+    if (from && to) {
+      query += ' AND completion_date BETWEEN $2 AND $3';
+      params.push(from, to);
+    }
+    const result = await pool.query(query, params);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: 'Server Error', message: err.message });
+  }
+});
+
+// Get all completions for all habits (optionally for a date range)
+app.get('/api/habits/completions', async (req, res) => {
+  try {
+    const { from, to } = req.query;
+    let query = 'SELECT * FROM habit_completions';
+    const params = [];
+    if (from && to) {
+      query += ' WHERE completion_date BETWEEN $1 AND $2';
+      params.push(from, to);
+    }
+    const result = await pool.query(query, params);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: 'Server Error', message: err.message });
+  }
+});
+
+// Get statistics for all habits
+app.get('/api/habits/statistics', async (req, res) => {
+  try {
+    // Total completions per habit, current streak, max streak, etc.
+    const stats = await pool.query(`
+      SELECT h.id, h.name,
+        (SELECT COUNT(*) FROM habit_completions hc WHERE hc.habit_id = h.id) AS total_completions,
+        (SELECT MAX(streak) FROM (
+          SELECT COUNT(*) AS streak FROM (
+            SELECT completion_date, completion_date - INTERVAL '1 day' * (ROW_NUMBER() OVER (ORDER BY completion_date)) AS grp
+            FROM habit_completions WHERE habit_id = h.id
+          ) t GROUP BY grp
+        ) s) AS max_streak
+      FROM habits h
+      ORDER BY h.id
+    `);
+    res.json(stats.rows);
+  } catch (err) {
+    res.status(500).json({ error: 'Server Error', message: err.message });
+  }
+});
+
+// --- END HABITS API ---
 
 app.listen(port, async () => {
   console.log(`Server is running on port ${port}`);

@@ -1,8 +1,249 @@
-/* Styles for HabitTracker Component */
-
-.habit-widget {
-    /* Inherits from .dashboard-section */
+/* Glassmorphism Style für HabitTracker */
+.habit-tracker-glass {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2rem 0;
+  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  /* Optional: für kompletten Glas-Look */
 }
+
+.habits-overview-card {
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  backdrop-filter: blur(9px) saturate(180%);
+  -webkit-backdrop-filter: blur(9px) saturate(180%);
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 2rem 1.5rem 1rem 1.5rem;
+  margin: 1.5rem 0;
+  max-width: 480px;
+  width: 100%;
+  transition: box-shadow 0.25s, background 0.25s;
+}
+
+.habits-overview-card h2 {
+  color: #388e3c;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.04em;
+}
+
+.habit-add-form input,
+.habit-add-form select {
+  background: rgba(255,255,255,0.28);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #333;
+  box-shadow: 0 2px 8px rgba(76,175,80,0.06);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.habit-add-form button {
+  background: rgba(76,175,80,0.8);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2em;
+  padding: 0 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 1px 6px rgba(76,175,80,0.10);
+}
+
+.habit-add-form button:hover {
+  background: #388e3c;
+}
+
+.habits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.habit-card {
+  background: rgba(255,255,255,0.35);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 1px 6px rgba(76,175,80,0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: box-shadow 0.2s, background 0.2s;
+  border: 1px solid rgba(255,255,255,0.21);
+}
+
+.habit-card:hover {
+  background: rgba(232,245,233,0.5);
+  box-shadow: 0 2px 14px rgba(76,175,80,0.13);
+}
+
+.habit-title {
+  font-weight: 600;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.habit-meta {
+  color: #388e3c;
+  font-size: 1.1em;
+  font-weight: 500;
+}
+
+
+.habit-tracker-modern {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background: #f8fafc;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  padding: 2rem 2vw;
+  margin: 1.5rem 0;
+}
+
+.habit-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2vw;
+}
+
+.habit-header-row h2 {
+  margin: 0;
+  font-size: 2rem;
+  color: #3b3b3b;
+  letter-spacing: 0.04em;
+}
+
+.habit-stats-summary {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.habit-stat-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(76,175,80,0.07);
+  padding: 0.8rem 1.2rem;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.habit-stat-title {
+  font-weight: 700;
+  color: #388e3c;
+  margin-bottom: 0.3rem;
+}
+
+.habit-stat-row {
+  font-size: 1.05rem;
+  color: #444;
+  margin-bottom: 0.2rem;
+}
+
+.habit-main-row {
+  display: flex;
+  flex-direction: row;
+  gap: 2vw;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.habit-list-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  padding: 1.5rem 1.2rem;
+  min-width: 260px;
+  max-width: 340px;
+  flex: 1 1 300px;
+}
+
+.habit-add-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.habit-add-form input.habit-input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #f3f7f5;
+  color: #333;
+  font-size: 1.08em;
+}
+
+.habit-add-form button.add-habit-button {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0 18px;
+  font-size: 1.3em;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 1px 4px rgba(76,175,80,0.10);
+}
+
+.habit-add-form button.add-habit-button:hover {
+  background: #388e3c;
+}
+
+.habit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.habit-item-modern {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px dashed #e0e0e0;
+  gap: 10px;
+}
+
+.habit-item-modern:last-child {
+  border-bottom: none;
+}
+
+.habit-checkbox {
+  margin-right: 10px;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.habit-name {
+  flex-grow: 1;
+  font-size: 1.1em;
+  color: #333;
+}
+
+.delete-habit-button {
+  background: none;
+  border: none;
+  color: #ff5252;
+  font-size: 1.2em;
+  cursor: pointer;
+  padding: 3px 6px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.delete-habit-button:hover {
+  background: #ffeaea;
+}
+
+    /* Inherits from .dashboard-section */
 
 .habit-add-form {
     display: flex;
